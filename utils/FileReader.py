@@ -1,16 +1,27 @@
 
 class FileReader:
-    def __init__(self, file_name):
+    """
+        Класс для чтения и парсинга JSON-файлов с поддержкой вложенных структур.
+    """
+    def __init__(self, file_name: str):
+        """
+                Инициализация FileReader.
+
+                :param file_name: Путь к JSON-файлу для чтения.
+        """
         self.file_path = file_name
 
-    def read_file(self):
-        """Чтение и вывод содержимого JSON-файла с поддержкой вложенности."""
+    def read_file(self)-> list | dict | None:
+        """
+        Чтение и вывод содержимого JSON-файла с поддержкой вложенности.
+
+        :return: Распарсенные данные из JSON-файла (список, словарь или None).
+        """
         try:
             with open(self.file_path, 'r', encoding='utf-8') as json_file:
                 content = json_file.read().strip()
                 if content:
                     return self.parse_json(content) if content else []
-
                 else:
                     print("Файл пуст.")
         except FileNotFoundError:
@@ -18,8 +29,13 @@ class FileReader:
         except Exception as e:
             print(f"Произошла ошибка: {e}")
 
-    def parse_json(self, text):
-        """Парсинг JSON-строки"""
+    def parse_json(self, text: str)-> list | dict | str | bool | None | int | float:
+        """
+        Парсинг JSON-строки.
+
+        :param text: JSON-строка.
+        :return: Распарсенные данные (список, словарь, строка, число, bool, None).
+        """
         text = text.strip()
         if text.startswith("{"):
             return self.parse_object(text)
@@ -36,8 +52,13 @@ class FileReader:
         else:
             return self.parse_number(text)
 
-    def parse_object(self, text)->dict:
-        """Парсинг JSON-объекта."""
+    def parse_object(self, text: str)->dict:
+        """
+        Парсинг JSON-объекта.
+
+        :param text: JSON-строка, содержащая объект.
+        :return: Словарь, представляющий объект.
+        """
         obj = {}
         text = text[1:-1].strip()
         if text:
@@ -49,8 +70,13 @@ class FileReader:
                 obj[key] = value
         return obj
 
-    def parse_array(self, text)->list:
-        """Парсинг JSON-массива."""
+    def parse_array(self, text: str)->list:
+        """
+        Парсинг JSON-массива.
+
+        :param text: JSON-строка, содержащая массив.
+        :return: Список элементов массива.
+        """
         arr = []
         text = text[1:-1].strip()
         if text:
@@ -60,13 +86,24 @@ class FileReader:
         return arr
 
     @staticmethod
-    def parse_string(text)->list:
-        """Парсинг строки."""
+    def parse_string(text: str)->str:
+        """
+        Парсинг строки.
+
+        :param text: JSON-строка, содержащая строковое значение.
+        :return: Строка без кавычек.
+        """
         return text[1:-1]
 
     @staticmethod
-    def parse_number(text):
-        """Парсинг числовых значений (целые числа и числа с плавающей запятой)."""
+    def parse_number(text: str) -> int | float:
+        """
+        Парсинг числовых значений (целые числа и числа с плавающей запятой).
+
+        :param text: JSON-строка, содержащая число.
+        :return: Число (int или float).
+        :raises ValueError: Если текст не является числом.
+        """
         try:
             if '.' in text:
                 return float(text)
@@ -75,8 +112,13 @@ class FileReader:
             raise ValueError(f"Ошибка при парсинге числа: {text}")
 
     @staticmethod
-    def split_pairs(text)->list:
-        """Разделение строк на пары ключ-значение."""
+    def split_pairs(text: str) -> list[str]:
+        """
+        Разделение строк на пары ключ-значение.
+
+        :param text: JSON-строка, содержащая пары ключ-значение.
+        :return: Список строк, каждая из которых содержит пару ключ-значение.
+        """
         pairs = []
         balance = 0
         current_pair = []
@@ -95,8 +137,13 @@ class FileReader:
         return pairs
 
     @staticmethod
-    def split_elements(text)->list:
-        """Разделение элементов массива."""
+    def split_elements(text: str) -> list[str]:
+        """
+        Разделение элементов массива.
+
+        :param text: JSON-строка, содержащая элементы массива.
+        :return: Список строк, каждая из которых является элементом массива.
+        """
         elements = []
         balance = 0
         current_element = []

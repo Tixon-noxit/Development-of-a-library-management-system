@@ -7,7 +7,6 @@ class Controller:
         """Изменение статуса книги"""
         return self.library.changing_the_status_of_a_book(book_id, new_status)
 
-
     def search_books(self, keyword):
         """Поиск книг по ключевому слову"""
         return self.library.search_book(keyword)
@@ -22,8 +21,5 @@ class Controller:
 
     def remove_book(self, book_id):
         """Удаление книги"""
-        for book in self.library.books:
-            if book['id'] == book_id:
-                self.library.books.remove(book)
-                return f"Книга '{book['title']}' удалена."
-        return "Книга с указанным ID не найдена."
+        return self.library.remove_book(book_id)
+

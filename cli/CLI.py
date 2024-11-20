@@ -7,6 +7,7 @@ class CLI:
         self.controller = controller
         self.main_menu = main_menu
 
+
     @staticmethod
     def display_books_in_table(books):
         """Отображение всех книг в виде таблицы"""
@@ -61,13 +62,17 @@ class CLI:
             status_key = int(input("Укажите номер нового статуса книги: "))
             new_status = statuses.get(status_key)
 
-            if new_status:
-                if self.controller.change_book_status(book_id, new_status):
-                    print(f"Статус книги {book_id} успешно изменён на {new_status}.")
+            confirmation = input(f"Вы уверены, что хотите изменить статус книги с id {book_id}? (y/n): ").lower()
+            if confirmation == 'y' or confirmation == 'н':
+                if new_status:
+                    if self.controller.change_book_status(book_id, new_status):
+                        print(f"Статус книги {book_id} успешно изменён на {new_status}.")
+                    else:
+                        print("Ошибка изменения статуса книги")
                 else:
-                    print("Ошибка изменения статуса книги")
+                    print("Некорректный выбор статуса.")
             else:
-                print("Некорректный выбор статуса.")
+                print(f"Изменения статуса книги {book_id} отменено.")
         except ValueError:
             print("Неверный ввод статуса.")
 
@@ -97,22 +102,32 @@ class CLI:
         else:
             print("Ошибка при добавлении книги.")
 
+    def remove_book(self):
+        book_id = input("Введите id книги: ")
+        confirmation = input(f"Вы уверены, что хотите удалить книгу с id {book_id}? (y/n): ").lower()
+        if confirmation == 'y' or confirmation == 'н':
+            print(f"Книга успешно удалена." if self.controller.remove_book(book_id) \
+                      else "Ошибка при удалении книги!")
+        else:
+            print("Удаление отменено.")
+
+
     def handle_choice(self):
         """Обработка выбора пользователя"""
         while True:
             try:
                 self.hr()
                 match int(input("Укажите номер(цифру) действия: ")):
-
                     case 1:
-                        print(f"{self.main_menu.get(1)}")
+                        print(f"{self.main_menu.get(1)} ...")
                         self.add_book()
                     case 2:
-                        print(f"{self.main_menu.get(2)}")
-                        # self.add_book()
+                        print(f"{self.main_menu.get(2)} ...")
+                        self.remove_book()
                     case 3:
                         print(f"{self.main_menu.get(3)} ...")
-                        self.display_books_in_table(self.controller.search_books(input("Введите Название, Автора или Год издания(Что-то одно): ")))
+                        self.display_books_in_table(self.controller.search_books(
+                            input("Введите Название, Автора или Год издания(Что-то одно): ")))
                     case 4:
                         print(f"{self.main_menu.get(4)} ...")
                         self.display_books_in_table(self.controller.get_all_books())
@@ -123,7 +138,9 @@ class CLI:
                         print(f"{self.main_menu.get(6)} ...")
                         break
                     case _:
-                        print("Такого значения нет в списке!")
+                        print(
+                            f"Некорректный выбор. Выберите одно из доступных действий: "
+                            f"{', '.join(map(str, self.main_menu.keys()))}.")
                 self.hr()
             except ValueError:
                 print("Пожалуйста, введите корректное число.")

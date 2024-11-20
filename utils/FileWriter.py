@@ -2,18 +2,18 @@ class FileWriter:
     def __init__(self, file_path):
         self.file_path = file_path
 
-    def write_to_file(self, data):
+    def write_to_file(self, data)->bool:
         """Запись данных в файл в формате JSON"""
-        books_data = {
-            "books": data
-        }
-
-        json_content = self.format_json(books_data)
-
-        with open(self.file_path, 'w', encoding='utf-8') as file:
-            file.write(json_content)
-
-        print(f"Данные успешно записаны в {self.file_path}.")
+        try:
+            books_data = {
+                "books": data
+            }
+            json_content = self.format_json(books_data)
+            with open(self.file_path, 'w', encoding='utf-8') as file:
+                file.write(json_content)
+            return True
+        except:
+            return False
 
     def format_json(self, data):
         """Форматирование данных в строку JSON"""

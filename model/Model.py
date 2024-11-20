@@ -16,11 +16,10 @@ class Library:
             if book['id'] == int(book_id):
                 if new_status in statuses.values():
                     book['status'] = new_status
+                    self.file_writer.write_to_file(self.books)
                     return True
                 else:
-                    print("Некорректный статус!")
                     return False
-        print("Книга с таким ID не найдена.")
         return False
 
 
@@ -40,7 +39,7 @@ class Library:
         return book_list
 
 
-    def search_book(self,  keyword):
+    def search_book(self,  keyword)->list:
         """Поиск книги
            Пользователь может искать книги по title, author или year
         """
@@ -54,18 +53,35 @@ class Library:
         return results
 
 
-    def remove_book(self):
+    def remove_book(self, book_id)->bool:
         """Удаление книги"""
-        pass
+        try:
+            book_id = int(book_id)
+            book_to_remove = next((book for book in self.books if book['id'] == book_id), None)
+
+            if book_to_remove:
+                self.books.remove(book_to_remove)
+                self.file_writer.write_to_file(self.books)
+                return True
+            return False
+        except:
+            return False
 
 
     def add_book(self, new_book)->bool:
         """Добавление книги"""
         try:
             new_id = max([book['id'] for book in self.books], default=0) + 1
-            new_book['id'] = new_id
-            new_book['status'] = 'в наличии'
-            self.books.append(new_book)
+
+            ordered_book = {
+                'id': new_id,
+                'title': new_book.get('title', ''),
+                'author': new_book.get('author', ''),
+                'year': new_book.get('year', ''),
+                'status': 'в наличии'
+            }
+
+            self.books.append(ordered_book)
             self.file_writer.write_to_file(self.books)
             return True
         except:
