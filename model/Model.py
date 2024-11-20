@@ -1,18 +1,27 @@
-from common.common import book_details
+from common.Common import book_details, statuses
 
 
 class Library:
     """Модель для работы с книгами"""
-    def __init__(self, file_reader):
+    def __init__(self, file_reader, file_writer):
         self.reader = file_reader
+        self.file_writer = file_writer
         self.data = self.reader.read_file()
         self.books = self.data.get('books', []) if isinstance(self.data, dict) else self.data
 
 
-
-    def changing_the_status_of_a_book(self):
+    def changing_the_status_of_a_book(self, book_id, new_status)->bool:
         """ Изменение статуса книги"""
-        pass
+        for book in self.books:
+            if book['id'] == int(book_id):
+                if new_status in statuses.values():
+                    book['status'] = new_status
+                    return True
+                else:
+                    print("Некорректный статус!")
+                    return False
+        print("Книга с таким ID не найдена.")
+        return False
 
 
     def display_all_books(self)->list:
@@ -26,18 +35,15 @@ class Library:
         book_list = []
         for book in books:
             if isinstance(book, dict):
-                book_info = {
-                    book_details[0]: book.get('id'),
-                    book_details[1]: book.get('title'),
-                    book_details[2]: book.get('author'),
-                    book_details[3]: book.get('year'),
-                    book_details[4]: book.get('status')
-                }
+                book_info = {detail: book.get(detail) for detail in book_details}
                 book_list.append(book_info)
         return book_list
 
+
     def search_book(self,  keyword):
-        """Поиск книги"""
+        """Поиск книги
+           Пользователь может искать книги по title, author или year
+        """
         results = []
         keyword = keyword.lower()
 
@@ -52,6 +58,15 @@ class Library:
         """Удаление книги"""
         pass
 
-    def add_book(self):
+
+    def add_book(self, new_book)->bool:
         """Добавление книги"""
-        pass
+        try:
+            new_id = max([book['id'] for book in self.books], default=0) + 1
+            new_book['id'] = new_id
+            new_book['status'] = 'в наличии'
+            self.books.append(new_book)
+            self.file_writer.write_to_file(self.books)
+            return True
+        except:
+            return False

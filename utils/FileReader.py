@@ -10,9 +10,7 @@ class FileReader:
                 content = json_file.read().strip()
                 if content:
                     return self.parse_json(content) if content else []
-                    # data = self.parse_json(content)
-                    # return data
-                    # print(self.format_output(data))
+
                 else:
                     print("Файл пуст.")
         except FileNotFoundError:
@@ -115,22 +113,3 @@ class FileReader:
         if current_element:
             elements.append(''.join(current_element).strip())
         return elements
-
-    def format_output(self, data):
-        """Форматированный вывод данных."""
-        if isinstance(data, dict):
-            formatted = "{\n"
-            for key, value in data.items():
-                formatted += f'    "{key}": {self.format_output(value)},\n'
-            formatted = formatted.rstrip(",\n") + "\n}"
-            return formatted
-        elif isinstance(data, list):
-            formatted = "[\n"
-            for item in data:
-                formatted += f"    {self.format_output(item)},\n"
-            formatted = formatted.rstrip(",\n") + "\n]"
-            return formatted
-        elif isinstance(data, str):
-            return f'"{data}"'
-        else:
-            return str(data)
