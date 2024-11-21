@@ -1,16 +1,28 @@
 from common.Common import statuses, book_details, main_menu
+from common.Controller import Controller
+
 
 class CLI:
     """Класс для работы с пользовательским интерфейсом библиотеки"""
 
-    def __init__(self, controller):
+    def __init__(self, controller: Controller, main_menu: dict):
+        """
+                Инициализация интерфейса CLI.
+
+                :param controller: Экземпляр контроллера для управления библиотекой.
+                :param main_menu: Словарь с действиями главного меню.
+        """
         self.controller = controller
         self.main_menu = main_menu
 
 
     @staticmethod
-    def display_books_in_table(books):
-        """Отображение всех книг в виде таблицы"""
+    def display_books_in_table(books: list[dict]) -> None:
+        """
+        Отображение всех книг в виде таблицы.
+
+        :param books: Список книг, которые нужно отобразить.
+        """
         headers = ["ID", "Название", "Автор", "Год", "Статус"]
 
         column_widths = {header: len(header) for header in headers}
@@ -32,11 +44,11 @@ class CLI:
         print_hr()
 
     @staticmethod
-    def hr():
+    def hr()-> None:
         """Вывод разделителя"""
         print("=" * 30)
 
-    def display_menu(self):
+    def display_menu(self) -> None:
         """Отображение главного меню"""
         CLI.hr()
         print("     ГЛАВНОЕ МЕНЮ".center(30))
@@ -46,13 +58,13 @@ class CLI:
         CLI.hr()
 
     @staticmethod
-    def display_statuses():
+    def display_statuses() -> None:
         """Вывод на экран доступных статусов"""
         print("Доступные статусы:")
         for key, value in statuses.items():
             print(f'{key}. {value}')
 
-    def change_status_menu(self):
+    def change_status_menu(self) -> None:
         """Изменения статуса книги"""
         book_id = input("Укажите id книги для смены статуса: ")
 
@@ -77,7 +89,7 @@ class CLI:
             print("Неверный ввод статуса.")
 
 
-    def add_book(self):
+    def add_book(self) -> None:
         """Метод для добавления новой книги."""
         print("=" * 30)
 
@@ -102,7 +114,7 @@ class CLI:
         else:
             print("Ошибка при добавлении книги.")
 
-    def remove_book(self):
+    def remove_book(self) -> None:
         book_id = input("Введите id книги: ")
         confirmation = input(f"Вы уверены, что хотите удалить книгу с id {book_id}? (y/n): ").lower()
         if confirmation == 'y' or confirmation == 'н':
@@ -112,7 +124,7 @@ class CLI:
             print("Удаление отменено.")
 
 
-    def handle_choice(self):
+    def handle_choice(self) -> None:
         """Обработка выбора пользователя"""
         while True:
             try:
