@@ -1,17 +1,34 @@
 from common.Common import book_details, statuses
+from utils.FileReader import FileReader
+from utils.FileWriter import FileWriter
 
 
 class Library:
-    """Модель для работы с книгами"""
-    def __init__(self, file_reader, file_writer):
+    """
+    Класс для управления библиотекой книг. Поддерживает добавление, удаление,
+    изменение статуса книг, поиск и отображение всех книг.
+    """
+    def __init__(self,  file_reader: FileReader, file_writer: FileWriter):
+        """
+                Инициализация библиотеки.
+
+                :param file_reader: Объект для чтения данных из файла.
+                :param file_writer: Объект для записи данных в файл.
+        """
         self.reader = file_reader
         self.file_writer = file_writer
         self.data = self.reader.read_file()
         self.books = self.data.get('books', []) if isinstance(self.data, dict) else self.data
 
 
-    def changing_the_status_of_a_book(self, book_id, new_status)->bool:
-        """ Изменение статуса книги"""
+    def changing_the_status_of_a_book(self,  book_id: int, new_status: str) -> bool:
+        """
+                Изменение статуса книги.
+
+                :param book_id: Идентификатор книги.
+                :param new_status: Новый статус книги.
+                :return: True, если статус изменён успешно, иначе False.
+        """
         for book in self.books:
             if book['id'] == int(book_id):
                 if new_status in statuses.values():
@@ -23,8 +40,12 @@ class Library:
         return False
 
 
-    def display_all_books(self)->list:
-        """Получение списка книг из данных."""
+    def display_all_books(self)-> list[dict]:
+        """
+        Получение списка всех книг.
+
+        :return: Список словарей с информацией о книгах.
+        """
         books = []
         if isinstance(self.data, dict) and 'books' in self.data:
             books = self.data['books']
@@ -39,9 +60,13 @@ class Library:
         return book_list
 
 
-    def search_book(self,  keyword)->list:
-        """Поиск книги
-           Пользователь может искать книги по title, author или year
+    def search_book(self,  keyword: str) -> list[dict]:
+        """
+        Поиск книг по ключевому слову. Ключевое слово проверяется в полях
+        title, author и year.
+
+        :param keyword: Ключевое слово для поиска.
+        :return: Список книг, соответствующих ключевому слову.
         """
         results = []
         keyword = keyword.lower()
@@ -53,8 +78,13 @@ class Library:
         return results
 
 
-    def remove_book(self, book_id)->bool:
-        """Удаление книги"""
+    def remove_book(self, book_id: int) -> bool:
+        """
+        Удаление книги по её идентификатору.
+
+        :param book_id: Идентификатор книги для удаления.
+        :return: True, если книга успешно удалена, иначе False.
+        """
         try:
             book_id = int(book_id)
             book_to_remove = next((book for book in self.books if book['id'] == book_id), None)
@@ -68,8 +98,13 @@ class Library:
             return False
 
 
-    def add_book(self, new_book)->bool:
-        """Добавление книги"""
+    def add_book(self, new_book: dict) -> bool:
+        """
+                Добавление новой книги в библиотеку.
+
+                :param new_book: Словарь с информацией о новой книге (title, author, year).
+                :return: True, если книга успешно добавлена, иначе False.
+        """
         try:
             new_id = max([book['id'] for book in self.books], default=0) + 1
 
