@@ -28,11 +28,11 @@ class FileWriter:
         except:
             return False
 
-    def format_json(self, data: list | dict | str | int | float | bool | None) -> str:
+    def format_json(self, data: list | dict | str | int | float | bool) -> str:
         """
         Форматирование данных в строку JSON.
 
-        :param data: Данные для форматирования (словарь, список, строка, число, bool, None).
+        :param data: Данные для форматирования (словарь, список, строка, число, bool).
         :return: Строка в формате JSON.
         """
         if isinstance(data, dict):

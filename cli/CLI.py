@@ -75,7 +75,7 @@ class CLI:
             confirmation = input(f"Вы уверены, что хотите изменить статус книги с id {book_id}? (y/n): ").lower()
             if confirmation == 'y' or confirmation == 'н':
                 if new_status:
-                    if self.controller.change_book_status(book_id, new_status):
+                    if self.controller.change_book_status(int(book_id), new_status):
                         print(f"Статус книги {book_id} успешно изменён на {new_status}.")
                     else:
                         print("Ошибка изменения статуса книги")
@@ -116,7 +116,7 @@ class CLI:
         book_id = input("Введите id книги: ")
         confirmation = input(f"Вы уверены, что хотите удалить книгу с id {book_id}? (y/n): ").lower()
         if confirmation == 'y' or confirmation == 'н':
-            print(f"Книга успешно удалена." if self.controller.remove_book(book_id) \
+            print(f"Книга успешно удалена." if self.controller.remove_book(int(book_id)) \
                       else "Ошибка при удалении книги!")
         else:
             print("Удаление отменено.")

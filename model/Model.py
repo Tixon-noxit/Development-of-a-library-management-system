@@ -117,7 +117,8 @@ class Library:
             }
 
             self.books.append(ordered_book)
-            self.file_writer.write_to_file(self.books)
-            return True
+            if self.file_writer.write_to_file(self.books):
+                return True
+            else: return False
         except:
             return False

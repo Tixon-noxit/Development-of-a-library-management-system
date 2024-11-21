@@ -24,10 +24,13 @@ class FileReader:
                     return self.parse_json(content) if content else []
                 else:
                     print("Файл пуст.")
+                    return {}
         except FileNotFoundError:
             print(f"Файл {self.file_path} не найден.")
+            return {}
         except Exception as e:
             print(f"Произошла ошибка: {e}")
+            return {}
 
     def parse_json(self, text: str)-> list | dict | str | bool | None | int | float:
         """
