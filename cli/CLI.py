@@ -5,12 +5,10 @@ from common.Controller import Controller
 class CLI:
     """Класс для работы с пользовательским интерфейсом библиотеки"""
 
-    def __init__(self, controller: Controller, main_menu: dict):
+    def __init__(self, controller: Controller):
         """
                 Инициализация интерфейса CLI.
-
                 :param controller: Экземпляр контроллера для управления библиотекой.
-                :param main_menu: Словарь с действиями главного меню.
         """
         self.controller = controller
         self.main_menu = main_menu
